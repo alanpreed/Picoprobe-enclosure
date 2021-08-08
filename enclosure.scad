@@ -1,4 +1,5 @@
 include <pico.scad>;
+include <utilities.scad>;
 
 pillar_h = 3;
 pillar_d_inner = 3;
@@ -45,45 +46,6 @@ light_pipe_diameter = 3.1;
 light_pipe_support_depth = enclosure_z - pico_z - pillar_h - usb_z - 1;
 
 
-
-
-
-module corners(x_size, y_size){
-    for(p = [[x_size/2, y_size/2, 0],
-            [-x_size/2, y_size/2, 0],
-            [-x_size/2, -y_size/2, 0],
-            [x_size/2, -y_size/2, 0]]) {
-        translate(p){
-            children();
-        }
-    }
-}
-
-module rounded_rectangle(x, y, z, radius){
-    union(){
-        cube([x - 2 * radius, y, z], center=true);
-        cube([x, y - 2 * radius, z], center=true);
-
-        corners(x - 2 * radius, y - 2 * radius){
-            cylinder(r = radius, h = z, center=true, $fn=30);
-        }
-    }
-}
-
-module bolt_hole(diameter, countersink_depth){
-//    countersink_depth = 1.4;
-//    diameter = 2.5;
-    union(){
-        rotate_extrude(angle=360, $fn=20){
-            polygon([[0,0], [0, countersink_depth], [diameter/2, countersink_depth], [2.25, 0]]);
-        }
-        translate([0, 0, countersink_depth/2]){
-            cylinder(r=diameter/2, h=20, $fn=20);
-            
-        }
-    }
-}
-
 module connector_pcb_holes(){
     translate([-connector_hole_separation/2,0,0]){
         children();
@@ -106,6 +68,8 @@ module connector_pcb_debug_pos(){
 }
 
 module connector_pcb_pos(){
+    pico_top_pos = pico_z- enclosure_z/2 + pillar_h;
+    sep = pico_top_pos + connector_pcb_y/2;
     translate([0, connector_pcb_pillar_h + connector_pcb_z/2 -enclosure_y/2, sep + connector_pcb_pico_separation]){
         rotate([90, 0, 0]){
             children();
@@ -231,10 +195,22 @@ module enclosure_lid(){
                 cube([2 * enclosure_x, 2 * enclosure_y, enclosure_z + 2 * wall_thickness], center=true);
             }
             
+            // Light pipe top hole
             pico_led(){
                 cylinder(d=light_pipe_diameter, h=enclosure_z *2, $fn=20);
             }
+            
+            // Bolt holes
+            corners(enclosure_x - case_insert_d, enclosure_y - case_insert_d){
+                translate([0, 0, (enclosure_z)/2 + wall_thickness]){
+                    rotate([180, 0, 0]){
+                        bolt_hole(connector_hole_d, connector_hole_countersink_depth);
+                    }
+                }
+            }
         }
+        
+        // Light pipe support tube
         pico_led(){
             translate([0,0,(enclosure_z - light_pipe_support_depth)/2]){
                 difference(){
@@ -244,33 +220,39 @@ module enclosure_lid(){
             }
             
         }
+        // Lid inner ridge
+        difference(){
+            xy_inset(wall_thickness){
+                difference(){
+                    cube([enclosure_x, enclosure_y, enclosure_z], center=true);
+                    enclosure_shape();
+                }
+            }
+    
+            translate([0,0,-lid_insert_depth]){
+                cube([2 * enclosure_x, 2 * enclosure_y, enclosure_z], center=true);
+            }
+        }        
     }
 }
-
 
 
 translate([0,0,(pico_z-enclosure_z)/2 + pillar_h]){
     pico();
 }
-// Top of pico z offset from origin
-pico_top_pos = pico_z- enclosure_z/2 + pillar_h;
-echo(pico_top_pos);
 
-// Separation
-sep = pico_top_pos + connector_pcb_y/2;
-echo(sep);
 
 connector_pcb_pos(){
-    connector_pcb();
+//    connector_pcb();
 }
 
-translate([50,0,0]){
+translate([0,0,0]){
     enclosure_lid();
 }
 
 difference(){
 
-    enclosure_main();
+//    enclosure_main();
 //    enclosure_shape2();
 //    translate([0,0,enclosure_z/2 +50 - wall_thickness]){
 //        cube([100, 100, 100], center=true);
