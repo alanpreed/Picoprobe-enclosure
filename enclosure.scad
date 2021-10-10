@@ -41,10 +41,22 @@ enclosure_x = connector_pcb_x + 2 * (case_insert_d + wall_thickness + corner_cle
 enclosure_y = pico_y + corner_clearance;
 enclosure_z = connector_pcb_y + pico_z + pillar_h + connector_pcb_pico_separation + lid_insert_depth;
 
+lid_leeway = 0.2;
+
+text_depth = 0.6;
+
 light_pipe_diameter = 3.3;
 light_pipe_support_depth = enclosure_z - pico_z - pillar_h - usb_z - 1;
 
+switch_x_centre = enclosure_x / 2;
+switch_y_centre = 0;
+switch_z_centre = enclosure_z / 6;
+
 button_presser_d = 5;
+button_presser_flange_depth = 2;
+button_presser_support_h =  10;
+button_presser_h = enclosure_z - pillar_h - pico_z - button_z + wall_thickness + 0.5;
+
 
 module connector_pcb_holes(){
     translate([-connector_hole_separation/2,0,0]){
@@ -76,10 +88,6 @@ module connector_pcb_pos(){
         }
     }
 }
-
-switch_x_centre = enclosure_x / 2;
-switch_y_centre = 0;
-switch_z_centre = enclosure_z / 6;
 
 module switch_pos(){
     translate([switch_x_centre, switch_y_centre, switch_z_centre]){
@@ -272,7 +280,32 @@ module enclosure_lid(){
                     }
                 }
             }
+            
+            // Lid label
+            // https://www.thingiverse.com/thing:3099888/files
+            logo_scale = 0.1;
+            translate([0, 0, enclosure_z/2 + wall_thickness - text_depth]){
+                scale([logo_scale, logo_scale, logo_scale]){
+                    translate([0, 0, -9.5]){
+                        import("RaspberryLogo_fixed-sharp-edge.stl");
+                    }
+                }   
+            }
+            
+            translate([0, -12, enclosure_z/2 + wall_thickness - text_depth]){
+                rotate([0, 0, 0]){
+                    linear_extrude(text_depth){
+                        text("picoprobe", font = "Noto Sans:style=Bold", halign="center", size=3);
+//                        text("picoprobe", font = "Liberation Sans:style=Bold", halign="center", size=2);
+                        translate([0, -8, 0]){
+                            text("Alan Reed", font = "Noto Sans:style=Bold", halign="center", size=3);
+                        }
+                    }
+                }
+            }
         }
+        
+
         
         // Light pipe support tube
         pico_led(){
@@ -285,12 +318,22 @@ module enclosure_lid(){
             
         }
         
+        // Button presser support tube
+        pico_button(){
+            translate([0, 0, (enclosure_z - button_presser_support_h) / 2]){
+                difference(){
+                    cylinder(d=button_presser_d + wall_thickness, h=button_presser_support_h, $fn=20, center=true);
+                    cylinder(d=button_presser_d, h=button_presser_support_h + 1, $fn=20, center=true);
+                }
+            }
+        }
+        
         
         // Lid inner ridge
         difference(){
             xy_inset(wall_thickness){
                 difference(){
-                    cube([enclosure_x, enclosure_y, enclosure_z], center=true);
+                    cube([enclosure_x-lid_leeway, enclosure_y-lid_leeway, enclosure_z], center=true);
                     enclosure_shape();
                 }
             }
@@ -298,16 +341,24 @@ module enclosure_lid(){
             translate([0,0,-lid_insert_depth]){
                 cube([2 * enclosure_x, 2 * enclosure_y, enclosure_z], center=true);
             }
-        }        
+        }
     }
 }
 
 module button_presser(){
-    
+    pico_button(){
+        translate([0, 0, -(enclosure_z - button_presser_h)/2 + pillar_h + button_z + pico_z]){
+            cylinder(h=button_presser_h, d=button_presser_d - 0.4, center=true, $fn=20);
+        }
+        
+        translate([0, 0, enclosure_z/2 - button_presser_support_h - button_presser_flange_depth/2]){
+            cylinder(h=button_presser_flange_depth, d=button_presser_d + 2 * button_presser_flange_depth, center=true, $fn=20);
+        }
+    }
 }
 
 translate([0,0,(pico_z-enclosure_z)/2 + pillar_h]){
-    pico();
+//    pico();
 }
 
 
@@ -315,28 +366,39 @@ connector_pcb_pos(){
 //    connector_pcb();
 }
 
-translate([0,0,0]){
-//    enclosure_lid();
+translate([0,0,10]){
+    enclosure_lid();
+    button_presser();
 }
 
 difference(){
 
     union(){
         enclosure_main();
-        enclosure_lid();
+
+//        enclosure_lid();
+        
+            
+
+//        button_presser();
     }
-//    translate([0, 70,0]){
+//
+//    translate([0, 0, -50 + enclosure_z/2 + 1*wall_thickness/4]){
 //        cube([100, 100, 100], center=true);
 //    }
 //    
-    translate([0,-50,0]){
-//        cube([100, 100, 100], center=true);
-    }
-//    translate([-50,0,0]){
+//    translate([0, 60 ,0]){
 //        cube([100, 100, 100], center=true);
 //    }
 //    
-//    translate([0,0,-50]){
+//    translate([0,-73,0]){
+//        cube([100, 100, 100], center=true);
+//    }
+//    translate([62,0,0]){
+//        cube([100, 100, 100], center=true);
+//    }
+//    
+//    translate([-62,0,0]){
 //        cube([100, 100, 100], center=true);
 //    }
 }
