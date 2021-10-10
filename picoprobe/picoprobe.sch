@@ -1,0 +1,136 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Switch:SW_SPDT SW1
+U 1 1 6150BB15
+P 7300 2850
+F 0 "SW1" H 7300 3200 50  0000 C CNN
+F 1 "V_Select" H 7300 3100 50  0000 C CNN
+F 2 "" H 7300 2850 50  0001 C CNN
+F 3 "~" H 7300 2850 50  0001 C CNN
+	1    7300 2850
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J2
+U 1 1 6150DE35
+P 4150 3750
+F 0 "J2" H 4230 3792 50  0000 L CNN
+F 1 "Serial" H 4230 3701 50  0000 L CNN
+F 2 "Connector_JST:JST_XH_B3B-XH-A_1x03_P2.50mm_Vertical" H 4150 3750 50  0001 C CNN
+F 3 "~" H 4150 3750 50  0001 C CNN
+	1    4150 3750
+	-1   0    0    1   
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x04 J1
+U 1 1 6150E258
+P 4150 2950
+F 0 "J1" H 4230 2942 50  0000 L CNN
+F 1 "Debug" H 4230 2851 50  0000 L CNN
+F 2 "Connector_JST:JST_XH_B4B-XH-A_1x04_P2.50mm_Vertical" H 4150 2950 50  0001 C CNN
+F 3 "~" H 4150 2950 50  0001 C CNN
+	1    4150 2950
+	-1   0    0    1   
+$EndComp
+$Comp
+L pi_pico:Pico U1
+U 1 1 6150EDF1
+P 6050 3750
+F 0 "U1" H 6050 4965 50  0000 C CNN
+F 1 "Pico" H 6050 4874 50  0000 C CNN
+F 2 "RPi_Pico:RPi_Pico_SMD_TH" V 6050 3750 50  0001 C CNN
+F 3 "" H 6050 3750 50  0001 C CNN
+	1    6050 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6750 2800 6950 2800
+Wire Wire Line
+	6950 2800 6950 2750
+Wire Wire Line
+	6950 2750 7100 2750
+Wire Wire Line
+	6750 2900 6950 2900
+Wire Wire Line
+	6950 2900 6950 2950
+Wire Wire Line
+	6950 2950 7100 2950
+Text GLabel 5350 3100 0    50   Input ~ 0
+SWCLK
+Text GLabel 5350 3200 0    50   Input ~ 0
+SWDIO
+Text GLabel 5350 3300 0    50   Input ~ 0
+TX
+Text GLabel 5350 3400 0    50   Input ~ 0
+RX
+Text GLabel 4350 3650 2    50   Input ~ 0
+TX
+Text GLabel 4350 3750 2    50   Input ~ 0
+RX
+Text GLabel 4350 2750 2    50   Input ~ 0
+VOUT
+Text GLabel 7500 2850 2    50   Input ~ 0
+VOUT
+Text GLabel 4350 3050 2    50   Input ~ 0
+SWCLK
+Text GLabel 4350 2850 2    50   Input ~ 0
+SWDIO
+$Comp
+L power:GND #PWR01
+U 1 1 615456C8
+P 4350 2950
+F 0 "#PWR01" H 4350 2700 50  0001 C CNN
+F 1 "GND" V 4355 2822 50  0000 R CNN
+F 2 "" H 4350 2950 50  0001 C CNN
+F 3 "" H 4350 2950 50  0001 C CNN
+	1    4350 2950
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 6154622C
+P 4350 3850
+F 0 "#PWR02" H 4350 3600 50  0001 C CNN
+F 1 "GND" V 4355 3722 50  0000 R CNN
+F 2 "" H 4350 3850 50  0001 C CNN
+F 3 "" H 4350 3850 50  0001 C CNN
+	1    4350 3850
+	0    -1   -1   0   
+$EndComp
+$Comp
+L power:GND #PWR03
+U 1 1 615486A6
+P 5350 3000
+F 0 "#PWR03" H 5350 2750 50  0001 C CNN
+F 1 "GND" V 5355 2872 50  0000 R CNN
+F 2 "" H 5350 3000 50  0001 C CNN
+F 3 "" H 5350 3000 50  0001 C CNN
+	1    5350 3000
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 61548CFB
+P 5350 3500
+F 0 "#PWR04" H 5350 3250 50  0001 C CNN
+F 1 "GND" V 5355 3372 50  0000 R CNN
+F 2 "" H 5350 3500 50  0001 C CNN
+F 3 "" H 5350 3500 50  0001 C CNN
+	1    5350 3500
+	0    1    1    0   
+$EndComp
+$EndSCHEMATC
